@@ -1,0 +1,19 @@
+{
+  "name": "sample-perf",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./sample.js"
+  },
+  "author": "Tylor Steinberger <tlsteinberger167@gmail.com> (github.com/Tylors)",
+  "license": "MIT",
+  "devDependencies": {
+    "@most/prelude": "^1.1.0",
+    "benchmark": "^2.1.0",
+    "most": "^0.18.8",
+    "rx": "^4.1.0",
+    "rxjs": "^5.0.0-beta.4"
+  }
+}
