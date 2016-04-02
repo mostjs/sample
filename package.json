@@ -7,8 +7,8 @@
     "dist/@most/sample.js"
   ],
   "scripts": {
-    "build-dist": "mkdir -p dist && rollup src/index.js | babel --presets es2015 --plugins transform-es2015-modules-umd --module-id '@most/sample' -o dist/@most/sample.js",
-    "build": "npm run build-dist && uglifyjs dist/@most/sample.js -o dist/@most/sample.min.js",
+    "build-dist": "mkdir -p dist && rollup src/index.js | babel --presets es2015 --plugins transform-es2015-modules-umd --module-id '@most/sample' -o dist/sample.js",
+    "build": "npm run build-dist && uglifyjs dist/sample.js -o dist/sample.min.js",
     "prepublish": "npm run build",
     "preversion": "npm run build",
     "unit-test": "babel-node ./node_modules/.bin/isparta cover _mocha",
