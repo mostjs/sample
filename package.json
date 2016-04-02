@@ -1,0 +1,54 @@
+{
+  "name": "@most/sample",
+  "version": "1.0.0",
+  "description": "@most/sample",
+  "main": "dist/@most/sample.js",
+  "files": [
+    "dist/@most/sample.js"
+  ],
+  "scripts": {
+    "build-dist": "mkdir -p dist && rollup src/index.js | babel --presets es2015 --plugins transform-es2015-modules-umd --module-id '@most/sample' -o dist/@most/sample.js",
+    "build": "npm run build-dist && uglifyjs dist/@most/sample.js -o dist/@most/sample.min.js",
+    "prepublish": "npm run build",
+    "preversion": "npm run build",
+    "unit-test": "babel-node ./node_modules/.bin/isparta cover _mocha",
+    "lint": "jsinspect src && jsinspect test && eslint src test",
+    "test": "npm run lint && npm run unit-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mostjs/@most/sample.git"
+  },
+  "author": "Tylor Steinberger <tlsteinberger167@gmail.com> (github.com/TylorS)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mostjs/@most/sample/issues"
+  },
+  "homepage": "https://github.com/mostjs/@most/sample#readme",
+  "devDependencies": {
+    "@most/eslint-config-most": "^1.0.2",
+    "assert": "^1.3.0",
+    "babel-cli": "^6.6.5",
+    "babel-core": "^6.7.4",
+    "babel-eslint": "^6.0.2",
+    "babel-plugin-transform-es2015-modules-umd": "^6.6.5",
+    "babel-preset-es2015": "^6.6.0",
+    "eslint": "^2.6.0",
+    "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.2",
+    "isparta": "^4.0.0",
+    "jsinspect": "^0.8.0",
+    "mocha": "^2.4.5",
+    "most": "^0.18.8",
+    "rollup": "^0.25.7",
+    "sinon": "^1.17.3",
+    "uglify-js": "^2.6.2"
+  },
+  "peerDependencies": {
+    "most": "^0.18.8"
+  },
+  "dependencies": {
+    "@most/prelude": "^1.1.0"
+  }
+}
