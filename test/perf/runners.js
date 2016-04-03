@@ -1,6 +1,3 @@
-var kefir = require('kefir')
-kefir.DEPRECATION_WARNINGS = false
-
 exports.runSuite = runSuite
 
 exports.runMost = runMost
