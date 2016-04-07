@@ -4,12 +4,63 @@ import {describe, it} from 'mocha'
 import assert from 'assert'
 import sinon from 'sinon'
 
-import {observe, of, empty, take, skip, periodic, throwError} from 'most'
-import {sampleArray} from '../src/index'
+import {observe, of, empty, never, take, skip, periodic, throwError} from 'most'
+import {sample, sampleArray} from '../src/index'
 
 const sentinel = {value: 'sentinel'}
 
 describe('@most/sample', () => {
+  describe('sample', () => {
+    it('should pass in the sampler value', () => {
+      const fn = (sampler, s1) => ({sampler, s1})
+      const s = sample(fn, of('sampler'), of(1))
+
+      return observe(({sampler, s1}) => {
+        assert.strictEqual(sampler, 'sampler')
+        assert.strictEqual(s1, 1)
+      }, s)
+    })
+
+    it('should repeat last value after source ends', () => {
+      const s = sample(Array, periodic(1, 1), of(sentinel))
+
+      return observe(x => {
+        assert.deepEqual(x, [1, sentinel])
+      }, take(3, s))
+    })
+
+    it('should end if an error is thrown', () => {
+      const error = new Error('fail')
+      const s1 = throwError(error)
+      const sampler = periodic(1, 1)
+      const s = sampleArray(Array, sampler, s1)
+
+      observe(assert.fail, s)
+        .catch(err => {
+          assert.strictEqual(err, error)
+        })
+    })
+
+    it('should do nothing if stream never emits', () => {
+      const s = sample(Array, take(5, periodic(1, 1)), never())
+      const observer = sinon.spy()
+      return observe(observer, s).then(() => {
+        assert.strictEqual(observer.notCalled, true)
+      })
+    })
+
+    it('should be curried by default', () => {
+      const sampleByArray = sample(Array)
+      const samplePerMS = sampleByArray(take(5, periodic(1, 1)))
+      const s = samplePerMS(of(1))
+
+      return observe(([sampler, s1]) => {
+        assert.strictEqual(sampler, 1)
+        assert.strictEqual(s1, 1)
+      }, s)
+    })
+  })
+
   describe('sampleArray', () => {
     it('should be empty if sampler is empty', () => {
       const spy = sinon.spy()
@@ -21,17 +72,6 @@ describe('@most/sample', () => {
           assert.strictEqual(spy.notCalled, true)
           assert.strictEqual(observer.notCalled, true)
         })
-    })
-
-    it('should pass in the sampler value', () => {
-      const fn = (sampler, [s1, s2]) => ({sampler, s1, s2})
-      const s = sampleArray(fn, of('sampler'), [of(1), of(2)])
-
-      return observe(({sampler, s1, s2}) => {
-        assert.strictEqual(sampler, 'sampler')
-        assert.strictEqual(s1, 1)
-        assert.strictEqual(s2, 2)
-      }, s)
     })
 
     it('should sample the latest values', () => {
