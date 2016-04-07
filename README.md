@@ -11,12 +11,12 @@ Create a new stream by combining sampled values from many input streams.
 #### sample :: (a → b → c) → Stream a → Stream b → Stream c
 
 ```
-stream:                          -[1]---[2]---[3]---[4]---->
-sampler:                         -[a]---[a]---[a]---[a]---->
-sample(concat, sampler, stream): -[1,a]-[2,a]-[3,a]-[4,a]-->
+stream:                          -2--3-4--2--5--6---7---1->
+sampler:                         ---1----2----3-------5--->
+sample(sum, sampler, stream):    ---3----6----8-------12-->
 ```
 `sample` produces a value only when an event arrives on the sampler,
-passing an the value of the `sampler` along with the latest value from
+passing the value of the `sampler` along with the latest value from
 `stream`.
 
 `sample` is curried by default.
@@ -48,12 +48,13 @@ sampleEachSecond(of(2))
 #### sampleArray :: (a → [b] → c) → Stream a → [Stream b] → Stream c
 
 ```
-s1:                            -[1]---[2]---[3]---[4]---->
-sampler:                       -[a]---[a]---[a]---[a]---->
-sample(concat, sampler, [s1]): -[1,a]-[2,a]-[3,a]-[4,a]-->
+s1:                             -2--3-4--2--5--6---7---1->
+s2:                             -1--2---3----------4----->
+sampler:                        ---1----2----3-------5--->
+sample(sum, sampler, [s1, s2]): ---4----9----11-------16-->
 ```
 `sampleArray` produces a value only when an event arrives on the sampler,
-passing an the value of the `sampler` along with an array of latest values from
+passing the value of the `sampler` along with an array of latest values from
 streams contained in `arrayOfStreams`.
 
 `sampleArray` is curried by default.
