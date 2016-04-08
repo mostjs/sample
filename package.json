@@ -2,9 +2,9 @@
   "name": "@most/sample",
   "version": "1.0.0",
   "description": "@most/sample",
-  "main": "dist/@most/sample.js",
+  "main": "dist/sample.js",
   "files": [
-    "dist/@most/sample.js"
+    "dist/sample.js"
   ],
   "scripts": {
     "build-dist": "mkdir -p dist && rollup src/index.js | babel --presets es2015 --plugins transform-es2015-modules-umd --module-id '@most/sample' -o dist/sample.js",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mostjs/@most/sample.git"
+    "url": "git+https://github.com/mostjs/sample.git"
   },
   "author": "Tylor Steinberger <tlsteinberger167@gmail.com> (github.com/TylorS)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mostjs/@most/sample/issues"
+    "url": "https://github.com/mostjs/sample/issues"
   },
-  "homepage": "https://github.com/mostjs/@most/sample#readme",
+  "homepage": "https://github.com/mostjs/sample#readme",
   "devDependencies": {
     "@most/eslint-config-most": "^1.0.2",
     "assert": "^1.3.0",
