@@ -1,17 +1,17 @@
-import {SampleHold} from './SampleHold'
+import { SampleHold } from './SampleHold'
 
 export class SampleSink {
-  constructor (fn, source, sink) {
-    this.fn = fn
-    this.source = source
+  constructor (f, source, sink) {
     this.sink = sink
-    this.active = false
+    this.source = source
+    this.f = f
     this.hold = new SampleHold(this)
   }
 
   event (time, value) {
     if (this.hold.hasValue) {
-      this.sink.event(time, this.fn(value, this.hold.value))
+      const f = this.f
+      this.sink.event(time, f(value, this.hold.value))
     }
   }
 
