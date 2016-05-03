@@ -1,24 +1,18 @@
-import {SampleSink} from './SampleSink'
+import { SampleSink } from './SampleSink'
+import { SampleDisposable } from './SampleDisposable'
 
 export class SampleSource {
-  constructor (fn, sampler, stream) {
-    this.fn = fn
-    this.sampler = sampler.source
+  constructor (f, sampler, stream) {
     this.source = stream.source
+    this.sampler = sampler.source
+    this.f = f
   }
 
   run (sink, scheduler) {
-    const sampleSink = new SampleSink(this.fn, this.source, sink)
+    const sampleSink = new SampleSink(this.f, this.source, sink)
     const samplerDisposable = this.sampler.run(sampleSink, scheduler)
     const sourceDisposable = this.source.run(sampleSink.hold, scheduler)
 
-    return {
-      dispose () {
-        return Promise.all([
-          samplerDisposable.dispose(),
-          sourceDisposable.dispose()
-        ])
-      }
-    }
+    return new SampleDisposable(samplerDisposable, sourceDisposable)
   }
 }
