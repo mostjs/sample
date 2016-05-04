@@ -70,13 +70,12 @@
   }();
 
   var SampleSink = function () {
-    function SampleSink(fn, source, sink) {
+    function SampleSink(f, source, sink) {
       _classCallCheck(this, SampleSink);
 
-      this.fn = fn;
-      this.source = source;
       this.sink = sink;
-      this.active = false;
+      this.source = source;
+      this.f = f;
       this.hold = new SampleHold(this);
     }
 
@@ -84,7 +83,8 @@
       key: 'event',
       value: function event(time, value) {
         if (this.hold.hasValue) {
-          this.sink.event(time, this.fn(value, this.hold.value));
+          var f = this.f;
+          this.sink.event(time, f(value, this.hold.value));
         }
       }
     }, {
@@ -102,35 +102,49 @@
     return SampleSink;
   }();
 
+  var SampleDisposable = function () {
+    function SampleDisposable(samplerDisposable, sourceDisposable) {
+      _classCallCheck(this, SampleDisposable);
+
+      this.samplerDisposable = samplerDisposable;
+      this.sourceDisposable = sourceDisposable;
+    }
+
+    _createClass(SampleDisposable, [{
+      key: 'dispose',
+      value: function dispose() {
+        return Promise.all([this.samplerDisposable.dispose(), this.sourceDisposable.dispose()]);
+      }
+    }]);
+
+    return SampleDisposable;
+  }();
+
   var SampleSource = function () {
-    function SampleSource(fn, sampler, stream) {
+    function SampleSource(f, sampler, stream) {
       _classCallCheck(this, SampleSource);
 
-      this.fn = fn;
-      this.sampler = sampler.source;
       this.source = stream.source;
+      this.sampler = sampler.source;
+      this.f = f;
     }
 
     _createClass(SampleSource, [{
       key: 'run',
       value: function run(sink, scheduler) {
-        var sampleSink = new SampleSink(this.fn, this.source, sink);
+        var sampleSink = new SampleSink(this.f, this.source, sink);
         var samplerDisposable = this.sampler.run(sampleSink, scheduler);
         var sourceDisposable = this.source.run(sampleSink.hold, scheduler);
 
-        return {
-          dispose: function dispose() {
-            return Promise.all([samplerDisposable.dispose(), sourceDisposable.dispose()]);
-          }
-        };
+        return new SampleDisposable(samplerDisposable, sourceDisposable);
       }
     }]);
 
     return SampleSource;
   }();
 
-  var sample = (0, _prelude.curry3)(function (fn, sampler, stream) {
-    return new _most.Stream(new SampleSource(fn, sampler, stream));
+  var sample = (0, _prelude.curry3)(function (f, sampler, stream) {
+    return new _most.Stream(new SampleSource(f, sampler, stream));
   });
 
   var arrayId = function arrayId() {
@@ -141,8 +155,8 @@
     return values;
   };
 
-  var sampleArray = (0, _prelude.curry3)(function (fn, sampler, arrayOfStreams) {
-    return sample(fn, sampler, (0, _most.combineArray)(arrayId, arrayOfStreams));
+  var sampleArray = (0, _prelude.curry3)(function (f, sampler, arrayOfStreams) {
+    return sample(f, sampler, (0, _most.combineArray)(arrayId, arrayOfStreams));
   });
 
   exports.sample = sample;
