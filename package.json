@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "@most/sample",
   "main": "dist/sample.js",
+  "typings": "type-definitions/index.d.ts",
   "files": [
     "dist/sample.js"
   ],
