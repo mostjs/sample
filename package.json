@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "@most/sample",
   "main": "dist/sample.js",
+  "typings": "type-definitions/index.d.ts",
   "files": [
-    "dist/sample.js"
+    "dist/sample.js",
+    "type-definitions/index.d.ts"
   ],
   "scripts": {
     "build-dist": "mkdir -p dist && rollup src/index.js | babel --presets es2015 --plugins transform-es2015-modules-umd --module-id '@most/sample' -o dist/sample.js",
