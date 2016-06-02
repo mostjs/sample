@@ -45,7 +45,7 @@ sampleEachSecond(of(2))
 
 ```
 
-#### sampleArray :: (a → b → [c]) → Stream a → Stream b → [Stream c]
+#### sampleArray :: (a → [b] → c) → Stream a → [Stream b] → Stream c
 
 ```
 s1:                             -2--3-4--2--5--6---7---1->
