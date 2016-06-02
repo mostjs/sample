@@ -1,6 +1,6 @@
 {
   "name": "@most/sample",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "@most/sample",
   "main": "dist/sample.js",
   "typings": "type-definitions/index.d.ts",
