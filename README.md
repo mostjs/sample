@@ -42,7 +42,7 @@ sampleEachSecond(of(2))
   .take(3)
   .observe(([sec, val]) => {
     console.log('Seconds Passed: ' + sec);
-    console.log(sec * value);
+    console.log(sec * val);
   });
 // Seconds Passed: 0
 // 0
